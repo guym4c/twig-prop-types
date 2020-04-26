@@ -1,0 +1,25 @@
+{
+    "name": "guym4c/twig-prop-types",
+    "description": "Prop Types for Twig components",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/guym4c/twig-prop-types",
+    "keywords": ["twig", "props", "proptypes"],
+    "authors": [
+        {
+            "name": "Guy Mac",
+            "email": "hello@guymac.eu",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Guym4c\\TwigProps\\": "src/"
+        }
+    },
+    "require": {
+        "twig/twig": "^3.0",
+        "guym4c/prop-types": "^1.0"
+    }
+}
