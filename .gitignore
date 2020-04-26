@@ -1,0 +1,6 @@
+*.lock
+/.idea/
+/vendor/
+/var/
+/test/
+*.cache
