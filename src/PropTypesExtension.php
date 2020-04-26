@@ -27,7 +27,7 @@ class PropTypesExtension extends AbstractExtension {
         array $exclude = [],
         bool $allowExtraProperties = false
     ) {
-        $view->addGlobal($typesGlobal, new PropTypes());
+        $view->addGlobal($typesGlobal, new TwigPropTypes());
         $this->options = ['allow_extra_properties' => $allowExtraProperties];
         $this->exclude = array_merge($exclude, [$typesGlobal]);
     }

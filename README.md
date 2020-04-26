@@ -35,6 +35,9 @@ To validate your props, put the following at the top of a template file:
 
 The validator will ignore variables in the context that begin with an underscore.
 
+### Twig-specific differences
+* When giving a fully-qualified classname when checking for an instance type, you may use dots (`.`) instead of backslashes (`\`) to simplify string escaping issues, and the leading backslash or dot is optional.
+
 ### Advanced
 You may pass additional properties to the constructor:
 
@@ -53,4 +56,5 @@ public function __construct(
 |`string $typesGlobal`   | The name of the `PropTypes` Twig global (optional) |
 |`array $exclude`        | Additional Twig variable names to exclude, such as Twig globals you have set yourself. Variables starting with an underscore, and the types global, are automagically excluded.|
 | `bool $allowExtraProperties` | By default, the validator will throw an error if extra properties are in the context. Set this to `true` to disable this.|
+
 

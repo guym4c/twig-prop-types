@@ -20,6 +20,6 @@
     },
     "require": {
         "twig/twig": "^3.0",
-        "guym4c/prop-types": "^1.0"
+        "guym4c/prop-types": "^1.0.1"
     }
 }
