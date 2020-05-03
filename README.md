@@ -14,8 +14,10 @@ This package makes [guym4c/prop-types](https://github.com/guym4c/prop-types-php)
 *Props* in the Twig sense refers to the current context. You can use the `only` keyword in Twig to stop the context scope being inherited.
 
 ```php
-$twigEnv->addExtension(new Guym4c\TwigProps\PropTypesExtension($twigEnv));
+$twigEnv->addExtension(new Guym4c\TwigProps\PropTypesExtension($twigEnv, $bypass));
 ```
+
+You probably want to pass the bool `$bypass` to the constructor to prevent the validator from running in production, to avoid any performance issues.
 
 To validate your props, put the following at the top of a template file:
 

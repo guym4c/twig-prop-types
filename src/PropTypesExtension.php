@@ -10,9 +10,13 @@ use voku\helper\UTF8;
 
 class PropTypesExtension extends AbstractExtension {
 
+    private const PROP_FUNCTION_NAME = 'props';
+
     private array $options;
 
     private array $exclude;
+
+    private bool $bypass;
 
     /**
      * PropTypesExtension constructor.
@@ -23,6 +27,7 @@ class PropTypesExtension extends AbstractExtension {
      */
     public function __construct(
         Twig\Environment $view,
+        bool $bypass,
         string $typesGlobal = 'PropTypes',
         array $exclude = [],
         bool $allowExtraProperties = false
@@ -30,19 +35,22 @@ class PropTypesExtension extends AbstractExtension {
         $view->addGlobal($typesGlobal, new TwigPropTypes());
         $this->options = ['allow_extra_properties' => $allowExtraProperties];
         $this->exclude = array_merge($exclude, [$typesGlobal]);
+        $this->bypass = $bypass;
     }
 
     /**
      * @return TwigFunction[]
      */
     public function getFunctions(): array {
-        return [new TwigFunction(
-            'props',
-            function (array $context, array $props): void {
-                $this->check($context, $props);
-            },
-            ['needs_context' => true]
-        )];
+        return $this->bypass
+            ? [new TwigFunction(self::PROP_FUNCTION_NAME, function (array $props): void {})]
+            : [new TwigFunction(
+                'props',
+                function (array $context, array $props): void {
+                    $this->check($context, $props);
+                },
+                ['needs_context' => true]
+            )];
     }
 
     private function check(array $context, array $props): void {
