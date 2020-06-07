@@ -10,7 +10,8 @@ use voku\helper\UTF8;
 
 class PropTypesExtension extends AbstractExtension {
 
-    private const PROP_FUNCTION_NAME = 'props';
+    private const ASSERT_PROP_TYPES_FUNCTION_NAME = 'props';
+    private const SET_DEFAULT_PROPS_FUNCTION_NAME = 'defaults';
 
     private array $options;
 
@@ -21,9 +22,10 @@ class PropTypesExtension extends AbstractExtension {
     /**
      * PropTypesExtension constructor.
      * @param Twig\Environment $view
-     * @param string           $typesGlobal The global variable you use to access PropTypes
-     * @param array            $exclude Variable names in the twig context you would like to exclude
-     * @param bool             $allowExtraProperties Or, you may ignore all extra props
+     * @param bool $bypass
+     * @param string $typesGlobal The global variable you use to access PropTypes
+     * @param array $exclude Variable names in the twig context you would like to exclude
+     * @param bool $allowExtraProperties Or, you may ignore all extra props
      */
     public function __construct(
         Twig\Environment $view,
@@ -42,15 +44,32 @@ class PropTypesExtension extends AbstractExtension {
      * @return TwigFunction[]
      */
     public function getFunctions(): array {
-        return $this->bypass
-            ? [new TwigFunction(self::PROP_FUNCTION_NAME, function (array $props): void {})]
-            : [new TwigFunction(
-                'props',
-                function (array $context, array $props): void {
-                    $this->check($context, $props);
-                },
-                ['needs_context' => true]
-            )];
+        return array_merge(
+            $this->bypass
+                ? [
+                    new TwigFunction(self::ASSERT_PROP_TYPES_FUNCTION_NAME, function (array $props): void {})
+                ]
+                : [new TwigFunction(
+                    self::ASSERT_PROP_TYPES_FUNCTION_NAME,
+                    function (array $context, array $props): void {
+                        $this->check($context, $props);
+                    },
+                    ['needs_context' => true],
+                )],
+            [new TwigFunction(
+                self::SET_DEFAULT_PROPS_FUNCTION_NAME,
+                [$this, 'defaults'],
+                ['needs_context' => true],
+            )]
+        );
+    }
+
+    public function defaults(array &$context, array $defaults): void {
+        foreach ($defaults as $key => $value) {
+            if (!isset($context[$key])) {
+                $context[$key] = $value;
+            }
+        }
     }
 
     private function check(array $context, array $props): void {
